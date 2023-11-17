@@ -22,7 +22,11 @@
 
 /* _____________ 여기에 코드 입력 _____________ */
 
-type MyAwaited<T> = any
+type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer U>
+  ? U extends PromiseLike<any>
+    ? MyAwaited<U>
+    : U
+  : never
 
 /* _____________ 테스트 케이스 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -32,13 +36,14 @@ type Y = Promise<{ field: number }>
 type Z = Promise<Promise<string | number>>
 type Z1 = Promise<Promise<Promise<string | boolean>>>
 type T = { then: (onfulfilled: (arg: number) => any) => any }
-
+type A = Promise<number>
 type cases = [
   Expect<Equal<MyAwaited<X>, string>>,
   Expect<Equal<MyAwaited<Y>, { field: number }>>,
   Expect<Equal<MyAwaited<Z>, string | number>>,
   Expect<Equal<MyAwaited<Z1>, string | boolean>>,
   Expect<Equal<MyAwaited<T>, number>>,
+  Expect<Equal<MyAwaited<A>, number>>,
 ]
 
 // @ts-expect-error
