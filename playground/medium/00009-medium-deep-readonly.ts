@@ -34,9 +34,27 @@
   > GitHub에서 보기: https://tsch.js.org/9/ko
 */
 
+import type { Primitive } from 'utility-types'
+
 /* _____________ 여기에 코드 입력 _____________ */
 
-type DeepReadonly<T> = any
+type DeepReadonly<T> = T extends Function | string
+  ? T
+  : {
+      readonly [K in keyof T]: DeepReadonly<T[K]>
+    }
+
+// type DeepReadonly<T> = T extends Function | Primitive
+//   ? T
+//   : {
+//       readonly [K in keyof T]: DeepReadonly<T[K]>
+//     }
+
+// type DeepReadonly<T> = keyof T extends never
+//   ? T
+//   : {
+//       readonly [K in keyof T]: DeepReadonly<T[K]>
+//     }
 
 /* _____________ 테스트 케이스 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
