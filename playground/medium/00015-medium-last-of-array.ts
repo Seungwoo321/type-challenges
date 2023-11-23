@@ -24,16 +24,24 @@
 
 /* _____________ 여기에 코드 입력 _____________ */
 
-type Last<T extends any[]> = any
+// 1
+// type Last<T extends any[]> = T extends [...infer _Rest, infer Last] ? Last : never
+
+// 2
+// type Last<T extends any[]> = [any, ...T][T['length']]
+type Last<T extends unknown[]> = [unknown, ...T][T['length']]
 
 /* _____________ 테스트 케이스 _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import { Equal, Expect } from '@type-challenges/utils'
 
 type cases = [
   Expect<Equal<Last<[2]>, 2>>,
   Expect<Equal<Last<[3, 2, 1]>, 1>>,
   Expect<Equal<Last<[() => 123, { a: string }]>, { a: string }>>,
 ]
+
+// @ts-expect-error
+Expect<Equal<Last<[]>, 1>>
 
 /* _____________ 다음 단계 _____________ */
 /*
