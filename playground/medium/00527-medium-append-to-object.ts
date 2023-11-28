@@ -19,7 +19,20 @@
 
 /* _____________ 여기에 코드 입력 _____________ */
 
-type AppendToObject<T, U, V> = any
+// not working
+// type AppendToObject<T, U extends string, V> = T & Record<U, V>
+
+// working
+// type AppendToObject<T, U extends string, V> = Omit<T & Record<U, V>, never>
+// type AppendToObject<T, U extends string, V> = Pick<T & Record<U, V>, Exclude<keyof T | U, never>>
+type AppendToObject<T, U extends string, V> = {
+  [P in keyof T | U]: P extends keyof T ? T[P] : V
+}
+// type AppendToObject<T, U extends string, V> = Omit<{
+//   [P in keyof T]: T[P]
+// } & {
+//   [K in U]: V
+// }, never>
 
 /* _____________ 테스트 케이스 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
