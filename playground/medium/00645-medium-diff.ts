@@ -12,7 +12,7 @@
 
 /* _____________ 여기에 코드 입력 _____________ */
 
-type Diff<O, O1> = any
+type Diff<O, O1> = Omit<O & O1, keyof (O | O1)>
 
 /* _____________ 테스트 케이스 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
